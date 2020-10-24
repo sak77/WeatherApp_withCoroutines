@@ -1,0 +1,83 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt' //Kotlin kapt plugin is used for annotation processing in kotlin.
+// Used in case of Dagger or Data-binding. Below we add kapt dependency
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        applicationId "com.saket.weatherapp_withcoroutines"
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //Enable viewbinding and data binding
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
+    //Update Java Compiler version to Java 8
+    //Retrofit needs this version otherwise it throws exception....
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+}
+
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    kapt 'com.android.databinding:compiler:3.2.0-alpha10'
+
+
+    //Include Android KTX extension for fragment and activity
+
+    //Android KTX provides Kotlin extensions to the Android Jetpack library.
+    //Here we add dependencies of Fragment and Activity modules from Android KtX.
+    //These provide helper methods to initialize viewModels and perfrom fragment transactions.
+    implementation "androidx.activity:activity-ktx:1.1.0"
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
+
+    def version_moshi = "1.9.3"
+    //Moshi is a JSON converter library which also supports kotlin
+    implementation "com.squareup.moshi:moshi: $version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+
+    //Retrofit
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    //Moshi converter library is a library that parses json data and converts to objects in kotlin and java
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+
+    //Coroutines adapter for Retrofit which allows to return instance of deferred instead of Call
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
+
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.8'
+}
